@@ -1,0 +1,27 @@
+server.port: 8443
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: lb://product
+          predicates:
+            - Path=/product/**
+        - id: order-service
+          uri: lb://order
+          predicates:
+            - Path=/order/**
+        - id: rating-service
+          uri: lb://rating
+          predicates:
+            - Path=/rating/**
+
+management.endpoint.gateway.enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: TRACE
