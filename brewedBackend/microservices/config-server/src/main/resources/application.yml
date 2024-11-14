@@ -1,6 +1,8 @@
 server.port: 8888
 
 spring:
+  application:
+    name: "config-server"
   profiles:
     active: native
   cloud:
@@ -8,11 +10,13 @@ spring:
       server:
         native:
           searchLocations: file:${PWD}/config
-#          searchLocations: file:///Users//isaimartinez//workspace//github.com//wapo-isai//brewed//brewedBackend//microservices//config
 
 logging:
   level:
     root: info
+
+management.metrics.tags.application: ${spring.application.name}
+
 ---
 spring.config.activate.on-profile: docker
 spring.cloud.config.server.native.searchLocations: file:/config

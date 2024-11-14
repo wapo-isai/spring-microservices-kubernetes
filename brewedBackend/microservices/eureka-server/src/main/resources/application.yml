@@ -11,6 +11,8 @@ spring:
       maxAttempts: 20
     uri: http://localhost:8888
 
+management.metrics.tags.application: ${spring.application.name}
+
 ---
 spring.config.activate.on-profile: docker
 
