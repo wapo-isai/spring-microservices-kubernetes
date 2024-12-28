@@ -13,7 +13,15 @@ spring:
 
 management.metrics.tags.application: ${spring.application.name}
 
+logging:
+  level:
+    root: info
+    com:
+      wapo: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
 ---
 spring.config.activate.on-profile: docker
 
-spring.cloud.config.uri: http://config-server:8888
+spring.cloud.config.uri: http://configserver:8888

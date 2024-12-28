@@ -22,9 +22,6 @@ spring:
                   firstBackoff: 100ms
                   maxBackoff: 1s
                   factor: 2
-            - name: RequestTimeout
-              args:
-                timeout: 2000ms
         - id: order-service
           uri: lb://order-service
           predicates:
@@ -43,9 +40,6 @@ spring:
                   firstBackoff: 100ms
                   maxBackoff: 1s
                   factor: 2
-            - name: RequestTimeout
-              args:
-                timeout: 2000ms
         - id: rating-service
           uri: lb://rating-service
           predicates:
@@ -64,9 +58,6 @@ spring:
                   firstBackoff: 100ms
                   maxBackoff: 1s
                   factor: 2
-            - name: RequestTimeout
-              args:
-                timeout: 2000ms
 
 resilience4j.circuitbreaker:
   configs:

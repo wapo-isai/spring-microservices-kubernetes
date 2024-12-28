@@ -6,8 +6,8 @@ spring:
     name: product-service
   datasource:
     url: jdbc:postgresql://localhost:5432/brewedawakening
-    username: isaimartinez
-    password: $Wapoisai123
+    username: user
+    password: pwd
     driverClassName: org.postgresql.Driver
   jpa:
     generate-ddl: true
@@ -45,3 +45,8 @@ resilience4j.retry:
         - java.lang.NullPointerException
       retryExceptions:
         - java.util.concurrent.TimeoutException
+
+---
+spring.config.activate.on-profile: docker
+
+spring.datasource.url: jdbc:postgresql://postgres:5432/brewedawakening

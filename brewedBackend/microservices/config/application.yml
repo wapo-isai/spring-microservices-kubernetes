@@ -33,4 +33,4 @@ management:
 ---
 spring.config.activate.on-profile: docker
 
-app.eureka-server: eureka
+app.eureka-server: eurekaserver

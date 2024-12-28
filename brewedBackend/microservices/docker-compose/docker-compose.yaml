@@ -91,6 +91,19 @@ services:
       file: common-config.yml
       service: network-deploy-service
 
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "3110:3100"
+      - "4317:4317"
+    volumes:
+      - ./observability/tempo.yml:/etc/tempo-config.yml
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   grafana:
     image: grafana/grafana:latest
     environment:
@@ -130,7 +143,6 @@ services:
     extends:
       file: common-config.yml
       service: network-deploy-service
-    
 
   gateway:
     image: nginx:latest
@@ -203,7 +215,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "wapinho2016/config-server:v1"
+    image: "wapinho2016/config-server:v2"
     volumes:
       - $PWD/config:/config
     container_name: configserver-ms
@@ -220,9 +232,10 @@ services:
       service: microservice-base-config
     environment:
       SPRING_PROFILES_ACTIVE: docker, native
+      OTEL_SERVICE_NAME: "configserver"
 
   eurekaserver:
-    image: "wapinho2016/eureka-server:v1"
+    image: "wapinho2016/eureka-server:v2"
     container_name: eureka-server-ms
     ports:
       - "8761:8761"
@@ -237,9 +250,9 @@ services:
       start_period: 10s
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configserver-config
     environment:
-      SPRING_CLOUD_CONFIG_URI: http://configserver:8888
+      OTEL_SERVICE_NAME: "eurekaserver"
 
   postgres:
     image: postgres:latest
@@ -259,7 +272,7 @@ services:
       service: network-deploy-service
 
   product:
-    image: "wapinho2016/product-service:v1"
+    image: "wapinho2016/product-service:v2"
     container_name: product-ms
     ports:
       - "8080:8080"
@@ -278,15 +291,13 @@ services:
       start_period: 10s
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configserver-config
     environment:
-      SPRING_CLOUD_CONFIG_URI: http://configserver:8888
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/brewedawakening
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: pwd
+      OTEL_SERVICE_NAME: "product"
 
   order:
-    image: "wapinho2016/order-service:v1"
+    image: "wapinho2016/order-service:v2"
     container_name: order-ms
     ports:
       - "8081:8081"
@@ -305,15 +316,13 @@ services:
       start_period: 10s
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configserver-config
     environment:
-      SPRING_CLOUD_CONFIG_URI: http://configserver:8888
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/brewedawakening
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: pwd
+      OTEL_SERVICE_NAME: "order"
 
   rating:
-    image: "wapinho2016/rating-service:v1"
+    image: "wapinho2016/rating-service:v2"
     container_name: rating-ms
     ports:
       - "8082:8082"
@@ -332,15 +341,13 @@ services:
       start_period: 10s
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configserver-config
     environment:
-      SPRING_CLOUD_CONFIG_URI: http://configserver:8888
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/brewedawakening
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: pwd
+      OTEL_SERVICE_NAME: "rating"
 
   gatewayserver:
-    image: "wapinho2016/gateway:v1"
+    image: "wapinho2016/gateway:v2"
     container_name: gateway-server-ms
     ports:
       - "8443:8443"
@@ -353,9 +360,9 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configserver-config
     environment:
-      SPRING_CLOUD_CONFIG_URI: http://configserver:8888
+      OTEL_SERVICE_NAME: "gatewayserver"
 
 networks:
   wapo:

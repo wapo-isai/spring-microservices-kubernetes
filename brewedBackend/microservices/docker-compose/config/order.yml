@@ -6,8 +6,8 @@ spring:
     name: order-service
   datasource:
     url: jdbc:postgresql://localhost:5432/brewedawakening
-    username: isaimartinez
-    password: $Wapoisai123
+    username: user
+    password: pwd
     driverClassName: org.postgresql.Driver
   jpa:
     generate-ddl: true
@@ -16,3 +16,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         ddl-auto: update
       show-sql: true
+
+---
+spring.config.activate.on-profile: docker
+
+spring.datasource.url: jdbc:postgresql://postgres:5432/brewedawakening
